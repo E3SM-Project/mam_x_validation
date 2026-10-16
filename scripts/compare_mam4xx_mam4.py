@@ -285,12 +285,19 @@ if __name__ == '__main__':
     rel_inf = False
     if check_norms:
       if verbose_debug:
-        print(fill(f"o1_a = {list(o1_a)}", width=pwidth, tabsize=2,
-                   initial_indent=tabvar * ntabs,
-                   subsequent_indent=' ' * subs_ind))
-        print(fill(f"o2_a = {list(o2_a)}", width=pwidth, tabsize=2,
-                   initial_indent=tabvar * ntabs,
-                   subsequent_indent=' ' * subs_ind))
+        header = f"{'Index':>6} | {'o1 (mam4xx)':>22} | {'o2 (mam4)':>22} | {'Abs Error':>22} | {'Rel Error':>22}"
+        sep_line = '-' * len(header)
+        print(tabvar * ntabs + f"Comparison for output: {o_name}")
+        print(tabvar * ntabs + header)
+        print(tabvar * ntabs + sep_line)
+        for idx, (v1, v2) in enumerate(zip(o1_a, o2_a)):
+          abs_err = abs(v1 - v2)
+          denom = abs(v2)
+          if denom == 0.0:
+            rel_err_str = "0.0" if abs_err == 0.0 else "inf"
+          else:
+            rel_err_str = f"{abs_err / denom:22.14e}"
+          print(tabvar * ntabs + f"{idx:6d} | {v1:22.14e} | {v2:22.14e} | {abs_err:22.14e} | {rel_err_str:>22}")
         print_sep()
       if np.any(np.array(errvec_o[3:]) > error_threshold): pass_all_tests[i_out] = False
       # this should never happen, but might as well
