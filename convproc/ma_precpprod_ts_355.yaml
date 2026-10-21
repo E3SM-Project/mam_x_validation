@@ -1,6 +1,6 @@
 # Data at [lat=  -13.2292708024991      , lon=   139.817062054960      , k=          55 , time step=         355 ] 
 mam4xx:
-  function: compute_tendencies
+  function: ma_precpprod
 input:
   fixed:
     icol: [         1]
