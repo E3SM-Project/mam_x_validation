@@ -20,5 +20,4 @@ input.precnumx_base_old=[ 0.3293520152E+03]
 input.precabx_new=[ 0.3142317975E-04]
 # Output data is stored here.
 output = Object()
-output.scavabx_new=[ 0.0000000000E+00]
 output.resusp_x=[ 0.9306173331E+01]
