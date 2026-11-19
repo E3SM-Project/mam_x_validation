@@ -11,7 +11,7 @@ def usage():
     """Provides usage info."""
     print('compare_mam4xx_mam4.py: compares values in Python data modules.')
     print('usage: python3 compare_mam4xx_mam4.py <module1.py> <module2.py> ' +
-          '[check_norms (bool)] [error_tol] [--verbose_debug=(bool)] [--concise_debug=(bool)] [--strict]')
+          '[check_norms (bool)] [error_tol] [--verbose_debug] [--concise_debug] [--strict]')
 
 
 def norms(x_comp, x_ref):
@@ -140,10 +140,12 @@ if __name__ == '__main__':
 
   parser = argparse.ArgumentParser()
   parser.add_argument('-v', '--verbose_debug', required=False, default=False,
-                      help='boolean flag controlling whether input/output'
+                      action='store_true',
+                      help='flag controlling whether input/output '
                       + 'arrays are printed when diff is detected')
   parser.add_argument('-c', '--concise_debug', required=False, default=False,
-                      help='boolean flag controlling whether output is '
+                      action='store_true',
+                      help='flag controlling whether output is '
                       + 'printed in a concise manner for ease in diagnosing failures')
   parser.add_argument('--strict', required=False, default=False, action='store_true',
                       help='fail test if relative error exceeds threshold, '
@@ -155,7 +157,7 @@ if __name__ == '__main__':
 
   if verbose_debug and concise_debug:
     print('Error: the arguments --verbose_debug (-v) and --concise_debug (-c) '
-          + 'cannot both be set to true.')
+          + 'cannot both be set.')
     exit(1)
 
   testname = sys.argv[1].replace('.py', '')
