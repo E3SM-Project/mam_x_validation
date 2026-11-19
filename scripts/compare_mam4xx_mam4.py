@@ -11,7 +11,7 @@ def usage():
     """Provides usage info."""
     print('compare_mam4xx_mam4.py: compares values in Python data modules.')
     print('usage: python3 compare_mam4xx_mam4.py <module1.py> <module2.py> ' +
-          '[check_norms (bool)] [error_tol] [--verbose_debug=(bool)] [--concise_debug=(bool)]')
+          '[check_norms (bool)] [error_tol] [--verbose_debug] [--concise_debug] [--strict]')
 
 
 def norms(x_comp, x_ref):
@@ -140,18 +140,24 @@ if __name__ == '__main__':
 
   parser = argparse.ArgumentParser()
   parser.add_argument('-v', '--verbose_debug', required=False, default=False,
-                      help='boolean flag controlling whether input/output'
+                      action='store_true',
+                      help='flag controlling whether input/output '
                       + 'arrays are printed when diff is detected')
   parser.add_argument('-c', '--concise_debug', required=False, default=False,
-                      help='boolean flag controlling whether output is '
+                      action='store_true',
+                      help='flag controlling whether output is '
                       + 'printed in a concise manner for ease in diagnosing failures')
+  parser.add_argument('--strict', required=False, default=False, action='store_true',
+                      help='fail test if relative error exceeds threshold, '
+                      + 'even if absolute error passes')
   args = parser.parse_known_args(args=sys.argv)
   verbose_debug = args[0].verbose_debug
   concise_debug = args[0].concise_debug
+  strict_mode = args[0].strict
 
   if verbose_debug and concise_debug:
     print('Error: the arguments --verbose_debug (-v) and --concise_debug (-c) '
-          + 'cannot both be set to true.')
+          + 'cannot both be set.')
     exit(1)
 
   testname = sys.argv[1].replace('.py', '')
@@ -174,6 +180,7 @@ if __name__ == '__main__':
     print(f'Error threshold = {error_threshold}')
     print(f'Verbose debug = {verbose_debug}')
     print(f'Concise debug = {concise_debug}')
+    print(f'Strict mode = {strict_mode}')
     print_sep()
 
   # Make sure that the input and output names are identical.
@@ -346,8 +353,8 @@ if __name__ == '__main__':
   else:
     # We instruct ctest to return "Skipped" status in this case
     # This still prints at the end of the test suite but does not cause the
-    # entire thing to fail
-    if abs_error_pass:
+    # entire thing to fail (unless strict_mode is enabled)
+    if abs_error_pass and not strict_mode:
       print('regex_fail_rel_tol')
     else:
       exit(1)
